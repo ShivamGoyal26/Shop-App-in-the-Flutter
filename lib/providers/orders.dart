@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import './cart.dart';
 
 class OrderItem {
@@ -15,7 +15,7 @@ class OrderItem {
   });
 }
 
-class OrdersItem with ChangeNotifier {
+class Orders with ChangeNotifier {
   List<OrderItem> _orders = [];
 
   List<OrderItem> get orders {
