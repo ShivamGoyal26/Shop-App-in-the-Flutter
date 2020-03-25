@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../providers/product.dart';
+import '../providers/products.dart';
 
 class EditProductScreen extends StatefulWidget {
   static const routeName = '/edit-product';
@@ -50,10 +53,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     _form.currentState.save();
-    print(_editedProduct.title);
-    print(_editedProduct.id);
-    print(_editedProduct.price);
-    print(_editedProduct.description);
+    final products = Provider.of<Products>(
+      context,
+      listen: false,
+    ).addProduct(_editedProduct);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -110,7 +114,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   if (double.tryParse(value) == null) {
                     return "Please enter a valid number";
                   }
-                  if (double.parse(value) <= 0){
+                  if (double.parse(value) <= 0) {
                     return "Please enter the number greater than 0";
                   }
 
@@ -135,6 +139,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 validator: (value) {
                   if (value.isEmpty) {
                     return "This can't be empty";
+                  }
+                  if (value.length < 10) {
+                    return "Should be atleast 10 characters";
                   }
                   return null;
                 },
@@ -188,6 +195,15 @@ class _EditProductScreenState extends State<EditProductScreen> {
                         validator: (value) {
                           if (value.isEmpty) {
                             return "This can't be empty";
+                          }
+                          if (!value.startsWith('http') &&
+                              !value.startsWith('https')) {
+                            return "Please enter the valid URL";
+                          }
+                          if (!value.endsWith('.png') &&
+                              !value.endsWith('.jpg') &&
+                              !value.endsWith('.jpeg')) {
+                            return "Please enter the valid URL";
                           }
                           return null;
                         },
