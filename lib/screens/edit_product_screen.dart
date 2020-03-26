@@ -30,6 +30,21 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.initState();
   }
 
+  bool _isInit = false;
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      final productId = ModalRoute.of(context).settings.arguments as String;
+      _editedProduct = Provider.of<Products>(
+        context,
+        listen: false,
+      ).findById(productId);
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
   void _updateImageUrl() {
     if (!_imageUrlFocusNode.hasFocus) {
       setState(() {});
