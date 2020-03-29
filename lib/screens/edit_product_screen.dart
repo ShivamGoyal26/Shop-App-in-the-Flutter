@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -77,7 +79,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.dispose();
   }
 
-  void _saveForm() {
+  Future<void> _saveForm() async {
     setState(() {
       _isLoading = true;
     });
@@ -94,10 +96,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
         _isLoading = false;
       });
     } else {
-      final products = Provider.of<Products>(context, listen: false)
-          .addProduct(_editedProduct)
-          .catchError((error) {
-        showDialog(
+      try {
+        await Provider.of<Products>(context, listen: false)
+            .addProduct(_editedProduct);
+      } catch (error) {
+       await showDialog(
           context: context,
           builder: (ctx) => AlertDialog(
             title: Text("An error occured!"),
@@ -112,12 +115,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
             ],
           ),
         );
-      }).then((_) {
-        Navigator.of(context).pop();
+      } finally {
         setState(() {
           _isLoading = false;
         });
-      });
+      }
     }
   }
 
